@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -11,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +24,7 @@ public class Main {
 
         String fileName = "src/main/resources/data.xml";
         String outputFileName = "src/main/resources/output.txt";
-        writeString(Objects.requireNonNull(parseXML(fileName)), outputFileName);
+        writeString(Objects.requireNonNull(listToJson(parseXML(fileName))), outputFileName);
 
     }
 
@@ -64,5 +67,12 @@ public class Main {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    public static <T> String listToJson(List<T> list) {
+        Type listType = new TypeToken<List<T>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.toJson(list, listType);
     }
 }
